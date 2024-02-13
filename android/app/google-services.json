@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "362821979419",
+    "project_id": "utube-7626b",
+    "storage_bucket": "utube-7626b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:362821979419:android:404c5518ed825e4a0557be",
+        "android_client_info": {
+          "package_name": "com.example.job_task"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmNqfANlbXsVd63OLQC_Y3p0_CCY_1pjM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,13 +8,11 @@ import 'package:job_task/common_widgets/text_form_field.dart';
 import 'package:job_task/controller/provider/quiz_provider.dart';
 import 'package:job_task/model/quiz_model.dart';
 import 'package:job_task/view/create_quiz_screen.dart';
-import 'package:job_task/view/review_screen.dart';
+import 'package:provider/provider.dart';
 
 class QuizCategoryScreen extends StatefulWidget {
   static String route = "/createcategoryPage";
-  final CategoryModel? model;
-
-  const QuizCategoryScreen({super.key, this.model});
+  const QuizCategoryScreen({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -47,6 +45,15 @@ class _QuizCategoryScreenState extends State<QuizCategoryScreen> {
   late QuizProvider quizProvider;
 
   @override
+  void initState() {
+    super.initState();
+    quizProvider = Provider.of<QuizProvider>(context, listen: false);
+    if (quizProvider.questionsList.isEmpty) {
+      quizProvider.questionsList.add(QuestionModel());
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -74,7 +81,7 @@ class _QuizCategoryScreenState extends State<QuizCategoryScreen> {
               controller: _textFieldController1,
               fieldTitle: 'Quiz Title',
               onChanged: (value) {
-                quizProvider.category.title = value;
+                quizProvider.model.title = value;
 
                 return "";
               },
@@ -84,7 +91,7 @@ class _QuizCategoryScreenState extends State<QuizCategoryScreen> {
                 controller: _textFieldController2,
                 fieldTitle: 'Quiz Category',
                 onChanged: (value) {
-                  quizProvider.category.type = value;
+                  quizProvider.model.type = value;
 
                   return "";
                 }),
@@ -94,18 +101,15 @@ class _QuizCategoryScreenState extends State<QuizCategoryScreen> {
                 fieldTitle: 'Quiz Description',
                 maxLines: 3,
                 onChanged: (value) {
-                  quizProvider.category.des = value;
+                  quizProvider.model.des = value;
                   return "";
                 }),
             const SizedBox(height: 16.0),
             CustomButton(
               tap: () {
-                Get.toNamed(CreateQuizPage.route, arguments: {
-                  'quizTitle': _textFieldController1.text,
-                  'quizCategory': _textFieldController2.text,
-                  'quizDescription': _textFieldController3.text,
-                  'quizImage': _pickedImage!.path
-                });
+                Get.toNamed(
+                  CreateQuizPage.route,
+                );
               },
               buttonTitle: 'Next',
             )

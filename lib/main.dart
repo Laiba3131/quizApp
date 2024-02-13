@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:job_task/controller/provider/quiz_provider.dart';
 import 'package:job_task/view/quiz_category.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'app_routes/app_routes.dart';
 
 void main() {
   runApp(const MyApp());
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => QuizProvider()),
+    ],
+    child: const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +30,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         initialRoute: QuizCategoryScreen.route,
-        getPages: AppPages.pages,
+        getPages: AppPages.pages ?? [],
       );
     });
   }

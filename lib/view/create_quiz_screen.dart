@@ -23,15 +23,6 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
   late QuizProvider quizProvider;
 
   @override
-  void initState() {
-    super.initState();
-    quizProvider = Provider.of<QuizProvider>(context, listen: false);
-    if (quizProvider.quizList.isEmpty) {
-      quizProvider.quizList.add(QuizModel());
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -41,25 +32,23 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
           children: [
             heading('Your Qualification', () {
               setState(() {
-                quizProvider.quizList.add(QuizModel());
+                quizProvider.questionsList.add(QuestionModel());
               });
             }),
             //
             for (int index = 0;
-                index < quizProvider.quizList.length;
+                index < quizProvider.questionsList.length;
                 index++) ...[
-              qualificationFieldRow(index),
+              questionTextField(index),
               SizedBox(
                 height: 2.sp,
               ),
               CustomButton(
                   buttonTitle: 'Next',
                   tap: () {
-                    Get.toNamed(Review.route, arguments: {
-                      'questions': quizProvider.quizList
-                          .map((quiz) => quiz.toJson())
-                          .toList(),
-                    });
+                    Get.toNamed(
+                      ReviewScreen.route,
+                    );
                   })
             ],
           ],
@@ -103,7 +92,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
     );
   }
 
-  Widget qualificationFieldRow(int index) {
+  Widget questionTextField(int index) {
     return Column(
       children: [
         CustomTextFormField(
@@ -111,10 +100,10 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
           inputAction: TextInputAction.next,
           inputType: TextInputType.name,
           controller: TextEditingController(
-              text: quizProvider.quizList[index].firstQuestion),
+              text: quizProvider.questionsList[index].dquestion),
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
-            quizProvider.quizList[index].dquestion = value;
+            quizProvider.questionsList[index].dquestion = value;
             return "";
           },
         ),
@@ -123,14 +112,14 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
             Expanded(
               flex: 5,
               child: CustomTextFormField(
-                hintText: "optional1",
+                hintText: "option 1",
                 inputAction: TextInputAction.next,
                 inputType: TextInputType.name,
                 controller: TextEditingController(
-                    text: quizProvider.quizList[index].firstQuestion),
+                    text: quizProvider.questionsList[index].firstQuestion),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: (value) {
-                  quizProvider.quizList[index].secondQuestion = value;
+                  quizProvider.questionsList[index].firstQuestion = value;
                   return "";
                 },
               ),
@@ -141,16 +130,16 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
             Expanded(
               flex: 5,
               child: CustomTextFormField(
-                hintText: "optional1",
+                hintText: "option 2",
                 // focusNode: instituteFocus,
                 inputAction: TextInputAction.next,
                 inputType: TextInputType.name,
 
                 controller: TextEditingController(
-                    text: quizProvider.quizList[index].thirdQuestion),
+                    text: quizProvider.questionsList[index].secondQuestion),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: (value) {
-                  quizProvider.quizList[index].firstQuestion = value;
+                  quizProvider.questionsList[index].secondQuestion = value;
 
                   return "";
                 },
@@ -162,7 +151,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                 child: IconButton(
                   onPressed: () {
                     setState(() {
-                      quizProvider.quizList.removeAt(index);
+                      quizProvider.questionsList.removeAt(index);
                     });
                   },
                   icon: Icon(
@@ -183,21 +172,16 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
             Expanded(
               flex: 5,
               child: CustomTextFormField(
-                hintText: "optional1",
-                // focusNode: degreeFocus,
+                hintText: "option 3",
                 inputAction: TextInputAction.next,
                 inputType: TextInputType.number,
-
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: TextEditingController(
-                    text: quizProvider.quizList[index].firstQuestion),
+                    text: quizProvider.questionsList[index].thirdQuestion),
                 onChanged: (value) {
-                  quizProvider.quizList[index].firstQuestion = value;
+                  quizProvider.questionsList[index].thirdQuestion = value;
                   return "";
                 },
-                // onEditingComplete: () {
-                //   quizProvider.quizList.add(qualification);
-                // },
               ),
             ),
             SizedBox(
@@ -206,17 +190,17 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
             Expanded(
               flex: 5,
               child: CustomTextFormField(
-                hintText: "optional4",
+                hintText: "optiona 4",
                 // focusNode: instituteFocus,
                 inputAction: TextInputAction.next,
                 inputType: TextInputType.number,
 
                 controller: TextEditingController(
-                    text: quizProvider.quizList[index].secondQuestion),
+                    text: quizProvider.questionsList[index].fourthQuestion),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
 
                 onChanged: (value) {
-                  quizProvider.quizList[index].secondQuestion = value;
+                  quizProvider.questionsList[index].fourthQuestion = value;
                   return "";
                 },
               ),
