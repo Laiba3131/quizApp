@@ -40,7 +40,8 @@ class QuizProvider extends ChangeNotifier {
       await docRef.update({'id': docId});
 
       Get.snackbar('Success',
-          'Quiz data saved successfully to Firestore with ID: $docId');
+          'Quiz data saved successfully to Firestore with ID: $docId',
+          backgroundColor: Colors.green[100]);
       debugPrint('Quiz data saved successfully to Firestore with ID: $docId');
     } catch (e) {
       Get.snackbar('Error', 'Failed to save quiz data to Firestore: $e');

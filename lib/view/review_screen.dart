@@ -24,18 +24,36 @@ class _ReviewScreenState extends State<ReviewScreen> {
     return Consumer<QuizProvider>(builder: (context, vm, _) {
       return SafeArea(
         child: Scaffold(
+          bottomNavigationBar: Padding(
+            padding: EdgeInsets.all(7.sp),
+            child: CustomButton(
+                buttonTitle: 'Save',
+                tap: () async {
+                  // if (_formKey.currentState!.validate())
+                  {
+                    await buttonFn(vm, context);
+                    debugPrint('clicked');
+                  }
+                }),
+          ),
           appBar: AppBar(
-            title: const Text('Create Quiz'),
+            backgroundColor: Colors.amber,
+            title: Text(
+              'Review Quiz',
+              style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600),
+            ),
           ),
           body: SingleChildScrollView(
-            padding: EdgeInsets.all(5.sp),
+            padding: EdgeInsets.symmetric(vertical: 10.sp, horizontal: 10.sp),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Display Quiz Category Screen data
-                Text('${quozInstance.model.title}'),
-                Text('${quozInstance.model.type}'),
+                SizedBox(
+                  height: 5.sp,
+                ),
                 ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return customContainer(
                           "${quozInstance.questionsList[index].dquestion}",
@@ -45,39 +63,6 @@ class _ReviewScreenState extends State<ReviewScreen> {
                           "${quozInstance.questionsList[index].fourthQuestion}");
                     },
                     itemCount: quozInstance.questionsList.length),
-
-                CustomButton(
-                    buttonTitle: 'Generate CV',
-                    tap: () async {
-                      // if (_formKey.currentState!.validate())
-                      {
-                        await buttonFn(vm, context);
-                        debugPrint('clicked');
-                      }
-                    }),
-
-                // ElevatedButton(
-                //   onPressed: () async {
-                //     try {
-                //       await FirestoreService().saveQuizData(
-                //         quizTitle: basicVar.model.title!,
-                //         quizCategory: basicVar.model.type!,
-                //         quizDescription: basicVar.model.des!,
-                //         questions: questions
-                //             .map((question) => question.toJson())
-                //             .toList(),
-                //       );
-                //       ScaffoldMessenger.of(context).showSnackBar(
-                //         SnackBar(content: Text('Quiz data saved successfully')),
-                //       );
-                //     } catch (e) {
-                //       ScaffoldMessenger.of(context).showSnackBar(
-                //         SnackBar(content: Text('Failed to save quiz data')),
-                //       );
-                //     }
-                //   },
-                //   child: Text('Confirm and Save to Firebase'),
-                // ),
               ],
             ),
           ),
@@ -94,13 +79,21 @@ class _ReviewScreenState extends State<ReviewScreen> {
     String option4,
   ) {
     return Container(
+      margin: EdgeInsets.only(bottom: 10.sp),
+      padding: EdgeInsets.all(10.sp),
+      decoration: BoxDecoration(
+          color: Colors.amber[100], borderRadius: BorderRadius.circular(10.sp)),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(question),
           optionsRow(option1),
           optionsRow(option2),
           optionsRow(option3),
           optionsRow(option4),
+          SizedBox(
+            height: 5.sp,
+          )
         ],
       ),
     );
@@ -117,7 +110,7 @@ Widget optionsRow(option) {
             const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
       ),
       SizedBox(
-        width: 3.sp,
+        width: 10.sp,
       ),
       Text(option),
     ],

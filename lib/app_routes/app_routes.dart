@@ -5,8 +5,7 @@ import 'package:job_task/view/create_quiz_screen.dart';
 
 abstract class AppPages {
   static final List<GetPage> pages = [
-    GetPage(
-        name: QuizCategoryScreen.route, page: () => const QuizCategoryScreen()),
+    GetPage(name: QuizCategoryScreen.route, page: () => QuizCategoryScreen()),
     GetPage(name: CreateQuizPage.route, page: () => CreateQuizPage()),
     GetPage(name: ReviewScreen.route, page: () => ReviewScreen()),
   ];

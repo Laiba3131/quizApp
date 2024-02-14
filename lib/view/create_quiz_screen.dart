@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:job_task/common_widgets/custom_button.dart';
 import 'package:job_task/common_widgets/text_form_field.dart';
@@ -19,61 +18,61 @@ class CreateQuizPage extends StatefulWidget {
 }
 
 class _CreateQuizPageState extends State<CreateQuizPage> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  late QuizProvider quizProvider;
+  late QuizProvider quizCreate;
+  dynamic args;
+  QuizModel? quizCategoryModel;
+  @override
+  void initState() {
+    super.initState();
+    quizCreate = Provider.of<QuizProvider>(context, listen: false);
+    if (quizCreate.questionsList.isEmpty) {
+      quizCreate.questionsList.add(QuestionModel());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Create Quiz'),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.all(8.sp),
+          child: CustomButton(
+              buttonTitle: 'Next',
+              tap: () {
+                Get.toNamed(
+                  ReviewScreen.route,
+                );
+              }),
         ),
-        body: Column(
-          children: [
-            heading('Your Qualification', () {
-              setState(() {
-                quizProvider.questionsList.add(QuestionModel());
-              });
-            }),
-            //
-            for (int index = 0;
-                index < quizProvider.questionsList.length;
-                index++) ...[
-              questionTextField(index),
-              SizedBox(
-                height: 2.sp,
-              ),
-              CustomButton(
-                  buttonTitle: 'Next',
-                  tap: () {
-                    Get.toNamed(
-                      ReviewScreen.route,
-                    );
-                  })
-            ],
-          ],
+        appBar: AppBar(
+          backgroundColor: Colors.amber,
+          title: Text(
+            'Create Quiz',
+            style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600),
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 13.sp),
+            child: Column(
+              children: [
+                heading('Create Quiz', () {
+                  setState(() {
+                    quizCreate.questionsList.add(QuestionModel());
+                  });
+                }),
+                //
+                for (int index = 0;
+                    index < quizCreate.questionsList.length;
+                    index++) ...[
+                  questionTextField(index),
+                  SizedBox(
+                    height: 2.sp,
+                  ),
+                ],
+              ],
+            ),
+          ),
         ));
-  }
-
-  Future<void> saveQuestionsToFirestore(
-      List<Map<String, dynamic>> questions) async {
-    try {
-      final batch = _firestore.batch();
-      final collectionRef = _firestore.collection('quiz_questions');
-
-      for (var question in questions) {
-        batch.set(collectionRef.doc(), question);
-      }
-
-      await batch.commit();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Questions saved successfully')),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to save questions')),
-      );
-    }
   }
 
   Widget heading(String text, VoidCallback onTap) {
@@ -100,12 +99,15 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
           inputAction: TextInputAction.next,
           inputType: TextInputType.name,
           controller: TextEditingController(
-              text: quizProvider.questionsList[index].dquestion),
+              text: quizCreate.questionsList[index].dquestion),
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
-            quizProvider.questionsList[index].dquestion = value;
+            quizCreate.questionsList[index].dquestion = value;
             return "";
           },
+        ),
+        SizedBox(
+          height: 5.sp,
         ),
         Row(
           children: [
@@ -116,16 +118,16 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                 inputAction: TextInputAction.next,
                 inputType: TextInputType.name,
                 controller: TextEditingController(
-                    text: quizProvider.questionsList[index].firstQuestion),
+                    text: quizCreate.questionsList[index].firstQuestion),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: (value) {
-                  quizProvider.questionsList[index].firstQuestion = value;
+                  quizCreate.questionsList[index].firstQuestion = value;
                   return "";
                 },
               ),
             ),
             SizedBox(
-              width: 2.sp,
+              width: 5.sp,
             ),
             Expanded(
               flex: 5,
@@ -136,10 +138,10 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                 inputType: TextInputType.name,
 
                 controller: TextEditingController(
-                    text: quizProvider.questionsList[index].secondQuestion),
+                    text: quizCreate.questionsList[index].secondQuestion),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: (value) {
-                  quizProvider.questionsList[index].secondQuestion = value;
+                  quizCreate.questionsList[index].secondQuestion = value;
 
                   return "";
                 },
@@ -151,7 +153,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                 child: IconButton(
                   onPressed: () {
                     setState(() {
-                      quizProvider.questionsList.removeAt(index);
+                      quizCreate.questionsList.removeAt(index);
                     });
                   },
                   icon: Icon(
@@ -167,6 +169,9 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
             ),
           ],
         ),
+        SizedBox(
+          height: 5.sp,
+        ),
         Row(
           children: [
             Expanded(
@@ -174,18 +179,18 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
               child: CustomTextFormField(
                 hintText: "option 3",
                 inputAction: TextInputAction.next,
-                inputType: TextInputType.number,
+                inputType: TextInputType.text,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: TextEditingController(
-                    text: quizProvider.questionsList[index].thirdQuestion),
+                    text: quizCreate.questionsList[index].thirdQuestion),
                 onChanged: (value) {
-                  quizProvider.questionsList[index].thirdQuestion = value;
+                  quizCreate.questionsList[index].thirdQuestion = value;
                   return "";
                 },
               ),
             ),
             SizedBox(
-              height: 2.sp,
+              width: 5.sp,
             ),
             Expanded(
               flex: 5,
@@ -193,14 +198,14 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                 hintText: "optiona 4",
                 // focusNode: instituteFocus,
                 inputAction: TextInputAction.next,
-                inputType: TextInputType.number,
+                inputType: TextInputType.text,
 
                 controller: TextEditingController(
-                    text: quizProvider.questionsList[index].fourthQuestion),
+                    text: quizCreate.questionsList[index].fourthQuestion),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
 
                 onChanged: (value) {
-                  quizProvider.questionsList[index].fourthQuestion = value;
+                  quizCreate.questionsList[index].fourthQuestion = value;
                   return "";
                 },
               ),
@@ -210,6 +215,9 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
               child: Container(),
             ),
           ],
+        ),
+        SizedBox(
+          height: 5.sp,
         ),
       ],
     );
