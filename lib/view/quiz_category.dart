@@ -99,10 +99,15 @@ class _QuizCategoryScreenState extends State<QuizCategoryScreen> {
                     CustomButton(
                       tap: () {
                         if (_formKey.currentState!.validate()) {
-                          Get.toNamed(
-                            CreateQuizPage.route,
-                            arguments: {"model": quizCategory},
-                          );
+                          if (_image == null) {
+                            Get.snackbar("Error", 'Please pick image',
+                                backgroundColor: Colors.red[100]);
+                          } else {
+                            Get.toNamed(
+                              CreateQuizPage.route,
+                              arguments: {"model": quizCategory},
+                            );
+                          }
                         }
                       },
                       buttonTitle: 'Next',
