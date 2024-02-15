@@ -7,46 +7,23 @@ class QuizProvider extends ChangeNotifier {
   final List<QuestionModel> questionsList = [];
   QuizModel model = QuizModel();
 
-  // Future<void> saveQuizDataToFirestore(QuizModel quizModel) async {
-  //   try {
-  //     final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  //     final Map<String, dynamic> quizData = quizModel.toJson();
-  //     await firestore.collection('quizzes').add(quizData);
-  //     Get.snackbar('Success', 'Quiz data saved successfully to Firestore');
-  //     debugPrint('Quiz data saved successfully to Firestore');
-  //   } catch (e) {
-  //     Get.snackbar('Error', 'Failed to save quiz data to Firestore: $e');
-  //     debugPrint('Failed to save quiz data to Firestore: $e');
-  //     // Handle error as per your application's requirements
-  //   }
-  // }
-
   Future<void> saveQuizDataToFirestore(QuizModel quizModel) async {
     try {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       final Map<String, dynamic> quizData = quizModel.toJson();
-
-      // Add the quiz data to a Firestore collection called "quizzes"
       final DocumentReference docRef =
           await firestore.collection('quizzes').add(quizData);
-
-      // Get the auto-generated document ID
       final String docId = docRef.id;
-
-      // Update the QuizModel with the document ID
       quizModel.id = docId;
-
-      // Update the document in Firestore with the ID field
       await docRef.update({'id': docId});
 
       Get.snackbar('Success',
           'Quiz data saved successfully to Firestore with ID: $docId',
           backgroundColor: Colors.green[100]);
-      debugPrint('Quiz data saved successfully to Firestore with ID: $docId');
+      debugPrint('Quiz data saved successfully to Firestore');
     } catch (e) {
-      Get.snackbar('Error', 'Failed to save quiz data to Firestore: $e');
+      Get.snackbar('Error', 'Failed to save quiz data to Firestore');
       debugPrint('Failed to save quiz data to Firestore: $e');
-      // Handle error as per your application's requirements
     }
   }
 
