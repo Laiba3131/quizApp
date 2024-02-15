@@ -11,21 +11,6 @@ class QuizModel {
     this.updatedAt,
   });
 
-  QuizModel.fromJson(dynamic json) {
-    id = json['id'];
-    title = json['title'];
-    type = json['type'];
-    des = json['des'];
-    if (json['questions'] != null) {
-      questions = [];
-      json['questions'].forEach((v) {
-        questions?.add(QuestionModel.fromJson(v));
-      });
-    }
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-  }
-
   String? title;
   String? id;
   String? type;
@@ -59,13 +44,6 @@ class QuestionModel {
     this.fourthQuestion,
   });
 
-  QuestionModel.fromJson(dynamic json) {
-    dquestion = json['dquestion'];
-    firstQuestion = json['firstQuestion'];
-    secondQuestion = json['secondQuestion'];
-    thirdQuestion = json['thirdQuestion'];
-    fourthQuestion = json['fourthQuestion'];
-  }
   String? showDeleteIcon;
   String? thirdQuestion;
   String? dquestion;

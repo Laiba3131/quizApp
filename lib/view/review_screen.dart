@@ -10,6 +10,8 @@ import '../common_widgets/custom_button.dart';
 class ReviewScreen extends StatefulWidget {
   static String route = "/reviewScreenQuizPage";
 
+  const ReviewScreen({super.key});
+
   @override
   _ReviewScreenState createState() => _ReviewScreenState();
 }
@@ -29,10 +31,10 @@ class _ReviewScreenState extends State<ReviewScreen> {
             child: CustomButton(
                 buttonTitle: 'Save',
                 tap: () async {
-                  // if (_formKey.currentState!.validate())
                   {
                     await buttonFn(vm, context);
                     debugPrint('clicked');
+                    debugPrint("${quozInstance.model.title}");
                   }
                 }),
           ),
@@ -51,9 +53,17 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 SizedBox(
                   height: 5.sp,
                 ),
+                Text(
+                  "${quozInstance.model.title}",
+                  style:
+                      TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(
+                  height: 5.sp,
+                ),
                 ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return customContainer(
                           "${quozInstance.questionsList[index].dquestion}",
@@ -123,10 +133,15 @@ Future<void> buttonFn(QuizProvider vm, BuildContext context) async {
     title: vm.model.title,
     type: vm.model.type,
     des: vm.model.des,
-    questions: vm.model.questions,
+    questions: vm.questionsList,
     createdAt: now,
     updatedAt: now,
   );
+  debugPrint(vm.model.title);
+  debugPrint(vm.model.type);
+  debugPrint(vm.model.des);
+  // debugPrint(vm.model);
+  // debugPrint(vm.model.title);
   await context.read<QuizProvider>().saveQuizDataToFirestore(
         vm.model,
       );

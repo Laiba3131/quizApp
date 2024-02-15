@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:job_task/common_widgets/custom_button.dart';
 import 'package:job_task/common_widgets/text_form_field.dart';
+import 'package:job_task/common_widgets/validators.dart';
 import 'package:job_task/controller/provider/quiz_provider.dart';
 import 'package:job_task/view/create_quiz_screen.dart';
 import 'package:provider/provider.dart';
@@ -21,18 +22,20 @@ class QuizCategoryScreen extends StatefulWidget {
 class _QuizCategoryScreenState extends State<QuizCategoryScreen> {
   late QuizProvider quizCategory;
 
-  @override
-  void initState() {
-    super.initState();
-    quizCategory = QuizProvider(); // Initialize quizCategory here
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   quizCategory = QuizProvider(); // Initialize quizCategory here
+  // }
 
   ValueChanged<File?>? uploadImage;
   File? _image;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
+    quizCategory = Provider.of<QuizProvider>(context, listen: false);
+
     return SafeArea(
       child: Consumer<QuizProvider>(builder: (context, vm, _) {
         return Scaffold(
@@ -56,17 +59,22 @@ class _QuizCategoryScreenState extends State<QuizCategoryScreen> {
                     ),
                     CustomTextFormField(
                       hintText: 'Quiz title',
+                      validator: FieldValidator.validateEmpty,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       controller:
                           TextEditingController(text: quizCategory.model.title),
                       fieldTitle: 'Quiz Title',
                       onChanged: (value) {
                         quizCategory.model.title = value;
+
                         print('Title: ${quizCategory.model.title}');
                         return "";
                       },
                     ),
                     CustomTextFormField(
                         hintText: 'Quiz Category',
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: FieldValidator.validateEmpty,
                         controller: TextEditingController(
                             text: quizCategory.model.type),
                         fieldTitle: 'Quiz Category',
@@ -77,9 +85,11 @@ class _QuizCategoryScreenState extends State<QuizCategoryScreen> {
                         }),
                     CustomTextFormField(
                         hintText: 'Quiz titDescriptionle',
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller:
                             TextEditingController(text: quizCategory.model.des),
                         fieldTitle: 'Quiz Description',
+                        validator: FieldValidator.validateEmpty,
                         maxLines: 3,
                         onChanged: (value) {
                           quizCategory.model.des = value;
@@ -88,10 +98,12 @@ class _QuizCategoryScreenState extends State<QuizCategoryScreen> {
                     const SizedBox(height: 16.0),
                     CustomButton(
                       tap: () {
-                        Get.toNamed(
-                          CreateQuizPage.route,
-                          arguments: {"model": quizCategory},
-                        );
+                        if (_formKey.currentState!.validate()) {
+                          Get.toNamed(
+                            CreateQuizPage.route,
+                            arguments: {"model": quizCategory},
+                          );
+                        }
                       },
                       buttonTitle: 'Next',
                     )

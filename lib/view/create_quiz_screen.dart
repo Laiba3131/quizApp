@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:job_task/common_widgets/custom_button.dart';
 import 'package:job_task/common_widgets/text_form_field.dart';
+import 'package:job_task/common_widgets/validators.dart';
 import 'package:job_task/controller/provider/quiz_provider.dart';
 import 'package:job_task/model/quiz_model.dart';
 import 'package:job_task/view/review_screen.dart';
@@ -21,6 +22,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
   late QuizProvider quizCreate;
   dynamic args;
   QuizModel? quizCategoryModel;
+  final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -32,15 +34,21 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
 
   @override
   Widget build(BuildContext context) {
+    QuizProvider quozInstance =
+        Provider.of<QuizProvider>(context, listen: false);
     return Scaffold(
         bottomNavigationBar: Padding(
           padding: EdgeInsets.all(8.sp),
           child: CustomButton(
               buttonTitle: 'Next',
               tap: () {
-                Get.toNamed(
-                  ReviewScreen.route,
-                );
+                debugPrint("${quozInstance.model.title}");
+
+                if (_formKey.currentState!.validate()) {
+                  Get.toNamed(
+                    ReviewScreen.route,
+                  );
+                }
               }),
         ),
         appBar: AppBar(
@@ -53,23 +61,26 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 13.sp),
-            child: Column(
-              children: [
-                heading('Create Quiz', () {
-                  setState(() {
-                    quizCreate.questionsList.add(QuestionModel());
-                  });
-                }),
-                //
-                for (int index = 0;
-                    index < quizCreate.questionsList.length;
-                    index++) ...[
-                  questionTextField(index),
-                  SizedBox(
-                    height: 2.sp,
-                  ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  heading('Create Quiz', () {
+                    setState(() {
+                      quizCreate.questionsList.add(QuestionModel());
+                    });
+                  }),
+                  //
+                  for (int index = 0;
+                      index < quizCreate.questionsList.length;
+                      index++) ...[
+                    questionTextField(index),
+                    SizedBox(
+                      height: 2.sp,
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ));
@@ -101,6 +112,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
           controller: TextEditingController(
               text: quizCreate.questionsList[index].dquestion),
           autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: FieldValidator.validateEmpty,
           onChanged: (value) {
             quizCreate.questionsList[index].dquestion = value;
             return "";
@@ -120,6 +132,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                 controller: TextEditingController(
                     text: quizCreate.questionsList[index].firstQuestion),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: FieldValidator.validateEmpty,
                 onChanged: (value) {
                   quizCreate.questionsList[index].firstQuestion = value;
                   return "";
@@ -140,6 +153,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                 controller: TextEditingController(
                     text: quizCreate.questionsList[index].secondQuestion),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: FieldValidator.validateEmpty,
                 onChanged: (value) {
                   quizCreate.questionsList[index].secondQuestion = value;
 
@@ -181,6 +195,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                 inputAction: TextInputAction.next,
                 inputType: TextInputType.text,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: FieldValidator.validateEmpty,
                 controller: TextEditingController(
                     text: quizCreate.questionsList[index].thirdQuestion),
                 onChanged: (value) {
@@ -199,7 +214,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                 // focusNode: instituteFocus,
                 inputAction: TextInputAction.next,
                 inputType: TextInputType.text,
-
+                validator: FieldValidator.validateEmpty,
                 controller: TextEditingController(
                     text: quizCreate.questionsList[index].fourthQuestion),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
